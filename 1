@@ -1,0 +1,29 @@
+global:
+  resolve_timeout: 1m
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  receiver: 'slack'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  group_by: [env]
+  routes:
+  - receiver: 'slack'
+    matchers:
+      - env="prod"
+    continue: true
+
+  - receiver: 'slack'
+    matchers:
+      - env="dev"
+    group_wait: 1m
+    group_interval: 5m
+    repeat_interval: 24h
+
+
+receivers:
+- name: 'slack'
+  slack_configs:
+  - channel: '#monitoring-instances'
+    send_resolved: true

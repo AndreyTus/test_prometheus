@@ -1,0 +1,16 @@
+groups:
+
+- name: warning
+  rules:
+
+  - alert: PROD ABP code is not 200!!!
+    expr: sum (http_response_http_response_code{server=~'.*autoprobuys.com.*'} != 200)
+            by (server)
+    for: 2m
+    labels:
+      service: www
+      severity: warning
+      env: prod
+      application: APB
+    annotations:
+      summary: "URL {{ $labels.server }} is DOWN! Status CODE is: {{ $value | printf \"%.2f\" }}"
